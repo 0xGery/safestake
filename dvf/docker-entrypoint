@@ -1,0 +1,19 @@
+#!/bin/bash
+START_PRO=$1
+NODE_IP=`curl -s ifconfig.me`
+
+if [[ "$START_PRO" == "boot" ]]; then
+  /usr/local/bin/dvf_root_node $NODE_IP 9005 2>&1
+elif [[ -n "$START_PRO" && "$START_PRO" != "boot" ]]; then
+  /usr/local/bin/dvf validator_client \
+    --debug-level info \
+    --network ropsten \
+    --beacon-nodes http://127.0.0.1:5052 \
+    --api https://api-test.safestake.xyz/v1/collect_performance \
+    --contract-address 9a84542aCf14a00c4469fF2dE2AE0627b514aB05 \
+    --ip $NODE_IP \
+    --boot-enr $START_PRO 2>&1
+else
+  echo "Please input first argument(boot or enr) !"
+  exit 1
+fi
